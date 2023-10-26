@@ -3,18 +3,17 @@ use std::collections::HashMap;
 const MOD: i64 = 1000000007;
 
 pub fn solve(v: i32, arr: &Vec<i32>, dp: &mut HashMap<i32, i32>) -> i32 {
-    if let Some(sol) = dp.get(&v) {
-        if *sol != -1 {
-            return *sol;
-        }
-    }
     let mut sol: i64 = 1;
     for v2 in arr {
-        if *v2 < v {
+        if *v2 as f64 <= (v as f64).sqrt() {
             if v % v2 == 0 {
                 let v3 = v / v2;
                 if dp.contains_key(&v3) {
-                    sol += (solve(*v2, arr, dp) as i64 * solve(v / v2, arr, dp) as i64) % MOD;
+                    if *v2 == v3 {
+                        sol += (dp[v2] as i64 * dp[&v3] as i64) % MOD;
+                    } else {
+                        sol += (2 * dp[v2] as i64 * dp[&v3] as i64) % MOD;
+                    }
                     sol %= MOD;
                 }
             }
